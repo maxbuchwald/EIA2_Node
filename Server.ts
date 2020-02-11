@@ -5,8 +5,8 @@ import {MongoError} from "mongodb";
 
 export namespace Endabgabe {
     interface Score {
-        name: string,
-        points: number
+        name: string;
+        points: number;
     }
 
     let scoreboard: Mongo.Collection;
@@ -16,7 +16,7 @@ export namespace Endabgabe {
         port = 5001;
     }
 
-    let databaseUrl: string = 'mongodb+srv://max:endabgabe123@cluster0-uamzt.mongodb.net/test?retryWrites=true&w=majority';
+    let databaseUrl: string = "mongodb+srv://max:endabgabe123@cluster0-uamzt.mongodb.net/test?retryWrites=true&w=majority";
 
     connectToDatabase(databaseUrl);
     startServer(port);
@@ -36,27 +36,27 @@ export namespace Endabgabe {
 
         scoreboard = mongoClient.db("endabgabe").collection("scoreboard");
 
-        console.log('Connected to database');
+        console.log("Connected to database");
     }
 
     function handleRequest(_request: Http.IncomingMessage, _response: Http.ServerResponse): void {
         _response.setHeader("content-type", "text/html; charset=utf-8");
         _response.setHeader("Access-Control-Allow-Origin", "*");
 
-        if ((<string>_request.url).startsWith('/store')) {
+        if ((<string>_request.url).startsWith("/store")) {
             storeData(_request, _response);
             return;
         }
 
-        if ((<string>_request.url).startsWith('/get')) {
+        if ((<string>_request.url).startsWith("/get")) {
             getData(_request, _response);
             return;
         }
     }
 
-    function storeData(_request: Http.IncomingMessage, _response: Http.ServerResponse) {
+    function storeData(_request: Http.IncomingMessage, _response: Http.ServerResponse): void {
         let url: Url.UrlWithParsedQuery = Url.parse(<string> _request.url, true);
-        let query = url.query;
+        let query: any = url.query;
 
         if (query.name != null && query.score != null) {
             // Speicher in Datenbank
@@ -65,7 +65,7 @@ export namespace Endabgabe {
                 points: parseInt(query.score as string),
             };
 
-            console.log('store', score);
+            console.log("store", score);
 
             storeScore(score);
         }
@@ -73,12 +73,12 @@ export namespace Endabgabe {
         _response.end();
     }
 
-    function getData(_request: Http.IncomingMessage, _response: Http.ServerResponse) {
+    function getData(_request: Http.IncomingMessage, _response: Http.ServerResponse): void {
         scoreboard.find({}, {
             limit: 10,
             sort: {
-                points: -1,
-            },
+                points: -1
+            }
         }).toArray((_err: MongoError, docs: any[]) => {
             let jsonString: string = JSON.stringify(docs);
             _response.write(jsonString);

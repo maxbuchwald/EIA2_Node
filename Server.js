@@ -10,7 +10,7 @@ var Endabgabe;
     if (port == undefined) {
         port = 5001;
     }
-    let databaseUrl = 'mongodb+srv://max:endabgabe123@cluster0-uamzt.mongodb.net/test?retryWrites=true&w=majority';
+    let databaseUrl = "mongodb+srv://max:endabgabe123@cluster0-uamzt.mongodb.net/test?retryWrites=true&w=majority";
     connectToDatabase(databaseUrl);
     startServer(port);
     function startServer(_port) {
@@ -24,16 +24,16 @@ var Endabgabe;
         let mongoClient = new Mongo.MongoClient(_url, options);
         await mongoClient.connect();
         scoreboard = mongoClient.db("endabgabe").collection("scoreboard");
-        console.log('Connected to database');
+        console.log("Connected to database");
     }
     function handleRequest(_request, _response) {
         _response.setHeader("content-type", "text/html; charset=utf-8");
         _response.setHeader("Access-Control-Allow-Origin", "*");
-        if (_request.url.startsWith('/store')) {
+        if (_request.url.startsWith("/store")) {
             storeData(_request, _response);
             return;
         }
-        if (_request.url.startsWith('/get')) {
+        if (_request.url.startsWith("/get")) {
             getData(_request, _response);
             return;
         }
@@ -47,7 +47,7 @@ var Endabgabe;
                 name: query.name,
                 points: parseInt(query.score),
             };
-            console.log('store', score);
+            console.log("store", score);
             storeScore(score);
         }
         _response.end();
@@ -56,8 +56,8 @@ var Endabgabe;
         scoreboard.find({}, {
             limit: 10,
             sort: {
-                points: -1,
-            },
+                points: -1
+            }
         }).toArray((_err, docs) => {
             let jsonString = JSON.stringify(docs);
             _response.write(jsonString);
