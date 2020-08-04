@@ -21,7 +21,6 @@ var Endabgabe;
         server.addListener("request", handleRequest);
     }
     async function connectToDatabase(_url) {
-        // options noch nicht klar
         let options = { useNewUrlParser: true, useUnifiedTopology: true };
         let mongoClient = new Mongo.MongoClient(_url, options);
         await mongoClient.connect();
